@@ -14,6 +14,10 @@
   #include <ruby/video/gdi.cpp>
 #endif
 
+#if defined(VIDEO_EGL)
+  #include <ruby/video/egl.cpp>
+#endif
+
 #if defined(VIDEO_GLX)
   #include <ruby/video/glx.cpp>
 #endif
@@ -158,6 +162,10 @@ auto Video::create(string driver) -> bool {
   if(driver == "GDI") self.instance = new VideoGDI(*this);
   #endif
 
+  #if defined(VIDEO_EGL)
+  if(driver == "OpenGL 3.2") self.instance = new VideoEGL(*this);
+  #endif
+
   #if defined(VIDEO_GLX)
   if(driver == "OpenGL 3.2") self.instance = new VideoGLX(*this);
   #endif
@@ -206,6 +214,10 @@ auto Video::hasDrivers() -> vector<string> {
   "OpenGL 3.2",
   #endif
 
+  #if defined(VIDEO_EGL)
+  "OpenGL 3.2",
+  #endif
+
   #if defined(VIDEO_GLX)
   "OpenGL 3.2",
   #endif
@@ -235,6 +247,8 @@ auto Video::optimalDriver() -> string {
   #elif defined(VIDEO_GDI)
   return "GDI";
   #elif defined(VIDEO_CGL)
+  return "OpenGL 3.2";
+  #elif defined(VIDEO_EGL)
   return "OpenGL 3.2";
   #elif defined(VIDEO_GLX)
   return "OpenGL 3.2";
@@ -267,6 +281,8 @@ auto Video::safestDriver() -> string {
   #elif defined(VIDEO_GLX2)
   return "OpenGL 2.0";
   #elif defined(VIDEO_GLX)
+  return "OpenGL 3.2";
+  #elif defined(VIDEO_EGL)
   return "OpenGL 3.2";
   #else
   return "None";

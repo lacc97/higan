@@ -1,8 +1,20 @@
 #if defined(DISPLAY_XORG)
   #include <GL/gl.h>
-  #include <GL/glx.h>
-  #ifndef glGetProcAddress
-    #define glGetProcAddress(name) (*glXGetProcAddress)((const GLubyte*)(name))
+  #if defined(VIDEO_EGL) && defined(VIDEO_GLX)
+    #error Compiling EGL and GLX backends at the same time is not allowed (otherwise you get ODR violations)
+  #elif defined(VIDEO_EGL)
+    #include <EGL/egl.h>
+    #include <EGL/eglext.h>
+    #ifndef glGetProcAddress
+      #define glGetProcAddress(name) eglGetProcAddress(name)
+    #endif
+  #elif defined(VIDEO_GLX)
+    #include <GL/glx.h>
+    #ifndef glGetProcAddress
+      #define glGetProcAddress(name) (*glXGetProcAddress)((const GLubyte*)(name))
+    #endif
+  #else
+    #error Compiling unknown OpenGL backend for X11
   #endif
 #elif defined(DISPLAY_QUARTZ)
   #include <OpenGL/gl3.h>

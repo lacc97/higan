@@ -8,7 +8,7 @@ ifeq ($(ruby),)
     ruby += audio.openal
     ruby += input.quartz #input.carbon
   else ifeq ($(platform),linux)
-    ruby += video.glx video.glx2 video.xvideo video.xshm
+    ruby += video.egl video.xvideo video.xshm
     ruby += audio.oss audio.alsa audio.openal audio.pulseaudio audio.pulseaudiosimple audio.ao
     ruby += input.sdl input.xlib input.udev
   else ifeq ($(platform),bsd)
@@ -32,6 +32,7 @@ ruby.options :=
 ruby.options += $(if $(findstring video.cgl,$(ruby)),-framework OpenGL)
 ruby.options += $(if $(findstring video.direct3d,$(ruby)),-ld3d9)
 ruby.options += $(if $(findstring video.directdraw,$(ruby)),-lddraw)
+ruby.options += $(if $(findstring video.egl,$(ruby)),-lEGL -lGL)
 ruby.options += $(if $(findstring video.glx,$(ruby)),-lGL)
 ruby.options += $(if $(findstring video.wgl,$(ruby)),-lopengl32)
 ruby.options += $(if $(findstring video.xvideo,$(ruby)),-lXv)
